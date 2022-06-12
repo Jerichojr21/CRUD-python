@@ -31,8 +31,8 @@ app.config['TEMPLATE_FOLDER'] = os.path.realpath('.') + '/templates'
 # configuration of mail
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587
-app.config['MAIL_USERNAME'] = 'tugasyubiem@gmail.com'
-app.config['MAIL_PASSWORD'] = 'elsydppbcwbvqlac'
+app.config['MAIL_USERNAME'] = '**************'
+app.config['MAIL_PASSWORD'] = '***************'
 app.config['MAIL_USE_TLS'] = True
 app.config['MAIL_USE_SSL'] = False
 
