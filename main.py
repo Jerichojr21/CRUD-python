@@ -32,7 +32,7 @@ app.config['TEMPLATE_FOLDER'] = os.path.realpath('.') + '/templates'
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587
 app.config['MAIL_USERNAME'] = '**************'
-app.config['MAIL_PASSWORD'] = '***************'
+app.config['MAIL_PASSWORD'] = '*************'
 app.config['MAIL_USE_TLS'] = True
 app.config['MAIL_USE_SSL'] = False
 
@@ -162,18 +162,20 @@ def pelangganInsert():
         mysql.connection.commit()
         return redirect(url_for('home'))
 
-# proses Read data status booking (Line dibawah Masih error)
-# @app.route('/pelanggan-insert/detail')
-# def pelangganStatus():
-#    if 'loggedin' in session:
-#        email = session['email']
-#        cur = mysql.connection.cursor()
-#        cur.execute(
-#            'SELECT * FROM sewa WHERE email_pelanggan = %s', (email))
-#        datatampil = cur.fetchall()
-#        cur.close()
-#        return render_template('status.html', data_sewa=datatampil, username=session['nama'])
-#    return redirect(url_for('login'))
+# proses Read data status booking
+
+
+@app.route('/pelanggan-insert/detail')
+def pelangganStatus():
+    if 'loggedin' in session:
+        email = session['email']
+        cur = mysql.connection.cursor()
+        cur.execute(
+            'SELECT * FROM sewa WHERE email_pelanggan = %s', (email,))
+        datatampil = cur.fetchall()
+        cur.close()
+        return render_template('status.html', data_sewa=datatampil, username=session['nama'])
+    return redirect(url_for('login'))
 # Proses login admin dengan session
 
 
@@ -433,7 +435,7 @@ def mail():
                 email.append(i[0])
             cur.close()
 
-            pesan = Message(subject, sender='tugasyubiem@gmail.com',
+            pesan = Message(subject, sender='wannanoob@gmail.com',
                             recipients=email)
             pesan.body = msg
 
