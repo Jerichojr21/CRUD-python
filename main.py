@@ -31,8 +31,8 @@ app.config['TEMPLATE_FOLDER'] = os.path.realpath('.') + '/templates'
 # configuration of mail
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587
-app.config['MAIL_USERNAME'] = '**************'
-app.config['MAIL_PASSWORD'] = '*************'
+app.config['MAIL_USERNAME'] = 'wannanoob@gmail.com'
+app.config['MAIL_PASSWORD'] = 'iyqlxmopfiugueka'
 app.config['MAIL_USE_TLS'] = True
 app.config['MAIL_USE_SSL'] = False
 
@@ -69,25 +69,30 @@ def login():
         # Create variables for easy access
         email = request.form['email']
         password = request.form['password']
-        # Check if account exists using MySQL
-        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute(
-            'SELECT * FROM pelanggan WHERE email_pelanggan = %s AND password_pelanggan = %s', (email, password,))
-        # Fetch one record and return result
-        account = cursor.fetchone()
-        # If account exists in accounts table in out database
-        if account:
-            # Create session data, we can access this data in other routes
-            session['loggedin'] = True
-            # session['email'] = account['email']
-            session['email'] = account['email_pelanggan']
-            # session['username'] = account['nama_pelanggan']
-            session['nama'] = account['nama_pelanggan']
-            # Redirect to home page
-            return redirect(url_for('home'))
-        else:
-            # Account doesnt exist or username/password incorrect
-            msg = 'Incorrect email/password!'
+
+        try:
+            # Check if account exists using MySQL
+            cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            cursor.execute(
+                'SELECT * FROM pelanggan WHERE email_pelanggan = %s AND password_pelanggan = %s', (email, password,))
+            # Fetch one record and return result
+            account = cursor.fetchone()
+            # If account exists in accounts table in out database
+            if account:
+                # Create session data, we can access this data in other routes
+                session['loggedin'] = True
+                # session['email'] = account['email']
+                session['email'] = account['email_pelanggan']
+                # session['username'] = account['nama_pelanggan']
+                session['nama'] = account['nama_pelanggan']
+                # Redirect to home page
+                return redirect(url_for('home'))
+            else:
+                # Account doesnt exist or username/password incorrect
+                msg = 'Incorrect email/password!'
+        except:
+            return render_template('mail/error.html')
+
     # Show the login form with message (if any)
     return render_template('customer/login.html', msg=msg)
 
@@ -104,27 +109,31 @@ def register():
         password = request.form['password']
         email = request.form['email']
         username = request.form['username']
-        # Check if account exists using MySQL
-        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute(
-            'SELECT * FROM pelanggan WHERE email_pelanggan = %s', (email,))
-        account = cursor.fetchone()
-        # If account exists show error and validation checks
-        if account:
-            msg = 'Account already exists!'
-        elif not re.match(r'[^@]+@[^@]+\.[^@]+', email):
-            msg = 'Invalid email address!'
-        elif not re.match(r'[A-Za-z0-9]+', username):
-            msg = 'Username must contain only characters and numbers!'
-        elif not username or not password or not email:
-            msg = 'Please fill out the form!'
-        else:
-            # Account doesnt exists and the form data is valid, now insert new account into accounts table
-            cursor.execute('INSERT INTO pelanggan (email_pelanggan, id_pelanggan, nama_pelanggan, password_pelanggan) VALUES (%s, %s, %s, %s)',
-                           (email, '', username, password,))
-            mysql.connection.commit()
-            msg = 'You have successfully registered!'
-            return redirect(url_for('login'))
+
+        try:
+            # Check if account exists using MySQL
+            cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            cursor.execute(
+                'SELECT * FROM pelanggan WHERE email_pelanggan = %s', (email,))
+            account = cursor.fetchone()
+            # If account exists show error and validation checks
+            if account:
+                msg = 'Account already exists!'
+            elif not re.match(r'[^@]+@[^@]+\.[^@]+', email):
+                msg = 'Invalid email address!'
+            elif not re.match(r'[A-Za-z0-9]+', username):
+                msg = 'Username must contain only characters and numbers!'
+            elif not username or not password or not email:
+                msg = 'Please fill out the form!'
+            else:
+                # Account doesnt exists and the form data is valid, now insert new account into accounts table
+                cursor.execute('INSERT INTO pelanggan (email_pelanggan, id_pelanggan, nama_pelanggan, password_pelanggan) VALUES (%s, %s, %s, %s)',
+                               (email, '', username, password,))
+                mysql.connection.commit()
+                msg = 'You have successfully registered!'
+                return redirect(url_for('login'))
+        except:
+            return render_template('mail/error.html')
     elif request.method == 'POST':
         # Form is empty... (no POST data)
         msg = 'Please fill out the form!'
@@ -188,25 +197,29 @@ def loginAdmin():
         # Create variables for easy access
         email = request.form['email']
         password = request.form['password']
-        # Check if account exists using MySQL
-        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute(
-            'SELECT * FROM admin WHERE email_admin = %s AND password_admin = %s', (email, password,))
-        # Fetch one record and return result
-        account = cursor.fetchone()
-        # If account exists in accounts table in out database
-        if account:
-            # Create session data, we can access this data in other routes
-            session['loggedin_admin'] = True
-            # session['email'] = account['email']
-            session['username'] = account['nama_admin']
-            # session['email'] = account['email']
-            session['email_admin'] = account['email_admin']
-            # Redirect to home page
-            return redirect(url_for('adminTampilData'))
-        else:
-            # Account doesnt exist or username/password incorrect
-            msg = 'Incorrect username/password!'
+
+        try:
+            # Check if account exists using MySQL
+            cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            cursor.execute(
+                'SELECT * FROM admin WHERE email_admin = %s AND password_admin = %s', (email, password,))
+            # Fetch one record and return result
+            account = cursor.fetchone()
+            # If account exists in accounts table in out database
+            if account:
+                # Create session data, we can access this data in other routes
+                session['loggedin_admin'] = True
+                # session['email'] = account['email']
+                session['username'] = account['nama_admin']
+                # session['email'] = account['email']
+                session['email_admin'] = account['email_admin']
+                # Redirect to home page
+                return redirect(url_for('adminTampilData'))
+            else:
+                # Account doesnt exist or username/password incorrect
+                msg = 'Incorrect username/password!'
+        except:
+            return render_template('mail/error.html')
     # Show the login form with message (if any)
     return render_template('admin/login.html', msg=msg)
 
@@ -575,7 +588,7 @@ def print():
             response.headers['content-Disposition'] = 'inline; filename= laporan_sewa.pdf'
             return response
         except:
-            return render_template('mail/pdferror.html')
+            return render_template('mail/error.html')
     return redirect(url_for('loginAdmin'))
 
 
